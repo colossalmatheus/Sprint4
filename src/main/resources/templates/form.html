@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{titulo.nova.tarefa}">Gestão Fácil - Nova Tarefa</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class="container">
+
+<h1 class="title" th:text="#{titulo.nova.tarefa}">Nova Tarefa</h1>
+
+<form th:action="@{/task}" method="post" th:object="${tarefa}">
+
+    <div class="field">
+        <label class="label" for="titulo" th:text="#{label.titulo}">Título</label>
+        <div class="control">
+            <input id="titulo" th:field="*{titulo}" class="input" type="text" th:placeholder="#{placeholder.titulo}" required minlength="4" maxlength="255">
+        </div>
+        <p class="help is-danger" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></p>
+    </div>
+
+    <div class="field">
+        <label class="label" for="descricao" th:text="#{label.descricao}">Descrição</label>
+        <div class="control">
+            <textarea id="descricao" th:field="*{descricao}" class="textarea" th:placeholder="#{placeholder.descricao}" required minlength="4" maxlength="255"></textarea>
+        </div>
+        <p class="help is-danger" th:if="${#fields.hasErrors('descricao')}" th:errors="*{descricao}"></p>
+    </div>
+
+    <div class="field">
+        <label class="label" for="score" th:text="#{label.pontos}">Pontos</label>
+        <div class="control">
+            <input id="score" th:field="*{score}" class="input" type="number" th:placeholder="#{placeholder.pontos}" min="1" required>
+        </div>
+        <p class="help is-danger" th:if="${#fields.hasErrors('score')}" th:errors="*{score}"></p>
+    </div>
+
+    <div class="field">
+        <label class="label" for="status" th:text="#{label.status}">Status</label>
+        <div class="control">
+            <input id="status" th:field="*{status}" class="input" type="number" th:placeholder="#{placeholder.status}" min="1" max="100" required>
+        </div>
+        <p class="help is-danger" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></p>
+    </div>
+
+    <div class="buttons">
+        <a href="/" class="button is-default mb-4">
+            <span class="icon is-small">
+                <i class="fas fa-arrow-left"></i>
+            </span>
+            <span th:text="#{botao.cancelar}">Cancelar</span>
+        </a>
+
+        <button type="submit" class="button is-success mb-4">
+            <span class="icon is-small">
+                <i class="fas fa-check"></i>
+            </span>
+            <span th:text="#{botao.salvar}">Salvar</span>
+        </button>
+    </div>
+
+</form>
+
+</body>
+</html>

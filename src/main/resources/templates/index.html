@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{titulo.pagina}">Gestão Fácil</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class="container">
+
+<nav class="navbar mb-6" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <h1 class="title is-1" th:text="#{titulo.navbar}">Gestão Fácil</h1>
+        </a>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item" href="/" th:text="#{menu.tarefas}">Tarefas</a>
+            <a class="navbar-item" href="/users" th:text="#{menu.ranking}">Ranking</a>
+        </div>
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    <div th:if="${user != null}">
+                        <figure class="image">
+                            <img th:src="${user.avatar}" alt="avatar do usuário" class="is-rounded" />
+                        </figure>
+                        <span th:text="${user.name}"></span>
+                        <a href="/logout" class="button is-light" th:text="#{botao.logout}">Log out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<h1 class="title" th:text="#{titulo.tarefas.pendentes}">Tarefas Pendentes</h1>
+
+<div class="notification is-success" th:if="${message}" th:text="${message}"></div>
+
+<a href="/form" class="button is-success mb-4">
+    <span class="icon is-small">
+        <i class="fas fa-plus"></i>
+    </span>
+    <span th:text="#{botao.nova.tarefa}">Nova Tarefa</span>
+</a>
+
+<section class="grid is-col-min-10">
+    <div class="card cell has-background-grey-dark" th:each="task : ${tasks}">
+        <header class="card-header has-background-primary">
+            <p class="card-header-title" th:text="${task.titulo}"></p>
+            <span class="tag is-warning" th:text="${task.score} + ' ' + #{unidade.pontos}">pts</span>
+        </header>
+
+        <div class="card-content">
+            <div class="content" th:text="${task.descricao}"></div>
+
+            <div class="is-flex">
+                <!-- Formulário para decrementar o status da tarefa -->
+                <form th:action="@{/task/dec/{id}(id=${task.id})}" method="post">
+                    <input type="hidden" name="_method" value="put" />
+                    <button type="submit" class="button is-warning is-outlined">
+                        <span class="icon is-small">
+                            <i class="fas fa-minus"></i>
+                        </span>
+                    </button>
+                </form>
+
+                <!-- Barra de progresso para indicar o status -->
+                <progress class="progress is-primary" th:value="${task.status}" max="100"></progress>
+
+                <!-- Formulário para incrementar o status da tarefa -->
+                <form th:action="@{/task/inc/{id}(id=${task.id})}" method="post">
+                    <input type="hidden" name="_method" value="put" />
+                    <button type="submit" class="button is-warning is-outlined">
+                        <span class="icon is-small">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                    </button>
+                </form>
+            </div>
+
+            <figure class="image" th:if="${task.user != null}">
+                <img th:src="${task.user.avatar}" alt="avatar" class="is-rounded" style="width: 40px; height: 40px" />
+            </figure>
+        </div>
+
+        <footer class="card-footer">
+            <!-- Formulário para apagar a tarefa -->
+            <form th:action="@{/task/{id}(id=${task.id})}" method="post">
+                <input type="hidden" name="_method" value="delete" />
+                <button type="submit" class="button is-danger is-outlined">
+                    <span th:text="#{botao.apagar}">Apagar</span>
+                    <span class="icon is-small">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </button>
+            </form>
+
+            <!-- Formulário para pegar a tarefa -->
+            <form th:action="@{/task/catch/{id}(id=${task.id})}" method="post">
+                <input type="hidden" name="_method" value="put" />
+                <button type="submit" class="button is-primary is-outlined">
+                    <span th:text="#{botao.pegar}">Pegar</span>
+                    <span class="icon is-small">
+                        <i class="fas fa-hand"></i>
+                    </span>
+                </button>
+            </form>
+
+            <!-- Formulário para largar a tarefa -->
+            <form th:action="@{/task/release/{id}(id=${task.id})}" method="post">
+                <input type="hidden" name="_method" value="put" />
+                <button type="submit" class="button is-primary is-outlined">
+                    <span th:text="#{botao.largar}">Largar</span>
+                    <span class="icon is-small">
+                        <i class="fas fa-hand"></i>
+                    </span>
+                </button>
+            </form>
+        </footer>
+    </div>
+</section>
+
+</body>
+</html>
